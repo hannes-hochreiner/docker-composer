@@ -1,6 +1,6 @@
 {
   "name": "docker-composter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A deployment tool for Docker containers.",
   "main": "bld/index.js",
   "scripts": {
