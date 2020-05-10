@@ -1,6 +1,6 @@
-![CI](https://github.com/hannes-hochreiner/docker-composer/workflows/CI/badge.svg)
+![CI](https://github.com/hannes-hochreiner/docker-composter/workflows/CI/badge.svg)
 
-# docker-composer
+# docker-composter
 Deployment tool for Docker container.
 
 WIP
