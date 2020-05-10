@@ -1,14 +1,21 @@
 name: CI
-on: [push]
+on:
+  push:
+    tags:
+      - **
 
 jobs:
-  test:
-    name: Test
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
       - run: npm install
       - run: npm test
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
