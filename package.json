@@ -1,0 +1,28 @@
+{
+  "name": "docker-composer",
+  "version": "1.0.0",
+  "description": "A deployment tool for Docker containers.",
+  "main": "bld/index.js",
+  "scripts": {
+    "test": "npm run build; npm run build_test; jasmine --config=jasmine.json",
+    "build": "rm -r ./bld; babel src -d bld",
+    "build_test": "rm -r ./bld_test; babel src_test -d bld_test",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hannes-hochreiner/docker-composer.git"
+  },
+  "author": "Hannes Hochreiner <hannes@hochreiner.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hannes-hochreiner/docker-composer/issues"
+  },
+  "homepage": "https://github.com/hannes-hochreiner/docker-composer#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "jasmine": "^3.5.0"
+  }
+}
