@@ -3,6 +3,9 @@
   "version": "1.0.5",
   "description": "A deployment tool for Docker containers.",
   "main": "bld/index.js",
+  "bin": {
+    "docker-composter": "bld/binComposter.js"
+  },
   "scripts": {
     "test": "npm run build; npm run build_test; jasmine --config=jasmine.json",
     "build": "rm -r ./bld; babel src -d bld",
@@ -24,5 +27,9 @@
     "@babel/core": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "jasmine": "^3.5.0"
+  },
+  "dependencies": {
+    "commander": "^5.1.0",
+    "axios": "^0.19.2"
   }
 }
