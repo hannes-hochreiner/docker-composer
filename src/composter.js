@@ -12,6 +12,7 @@ export class Composter {
   }
 
   async up(config) {
+    this._logger.group('creating networks, volumes, and images');
     await Promise.all([
       // ensure networks exist
       this.removeDuplicates(Object.keys(config.networks)).map(elem => this._docker.ensureNetworkExists(elem, config.networks[elem].config)),
@@ -20,14 +21,19 @@ export class Composter {
       // ensure images exist
       this.removeDuplicates(Object.values(config.containers).map(elem => elem.config.Image)).map(elem => this._docker.ensureImageExists(elem))
     ].flat());
+    this._logger.groupEnd();
     // ensure containers exist
+    this._logger.group('creating containers');
     await Promise.all(
       Object.keys(config.containers).map(elem => this._docker.ensureContainerExists(elem, config.containers[elem].config))
     );
+    this._logger.groupEnd();
     // ensure containers are started in order
+    this._logger.group('starting containers');
     for (const containerName of Object.keys(config.containers)) {
       await this._docker.ensureContainerIsRunning(containerName);
     }
+    this._logger.groupEnd();
   }
 
   async down(config) {
