@@ -44,13 +44,13 @@ export class Composter {
     }
     this._logger.groupEnd();
     // ensure containers are removed
-    this._logger.group('remove containers');
+    this._logger.group('removing containers');
     await Promise.all(
       Object.keys(config.containers).map(elem => this._docker.ensureContainerIsRemoved(elem))
     );
     this._logger.groupEnd();
     // ensure all non-external networks, transient volumes, and dangling images are removed
-    this._logger.group('remove networks, volumes, and images');
+    this._logger.group('removing networks, volumes, and images');
     await Promise.all([
       this.removeDuplicates(Object.keys(config.networks)).filter(elem => config.networks[elem].type != 'external').map(elem => this._docker.ensureNetworkIsRemoved(elem)),
       this.removeDuplicates(Object.keys(config.volumes)).filter(elem => config.volumes[elem].type === 'transient').map(elem => this._docker.ensureVolumeIsRemoved(elem)),
