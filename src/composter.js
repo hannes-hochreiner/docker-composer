@@ -22,6 +22,16 @@ export class Composter {
       this.removeDuplicates(Object.values(config.containers).map(elem => elem.config.Image)).map(elem => this._docker.ensureImageExists(elem))
     ].reduce((acc, val) => acc.concat(val), []));
     this._logger.groupEnd();
+    // connect external containers to network
+    this._logger.group('connecting external containers');
+    await Promise.all(this.removeDuplicates(Object.keys(config.networks)).reduce((acc, val) => {
+      if (config.networks[val].externalContainers) {
+        acc = acc.concat(config.networks[val].externalContainers.map(elem => this._docker.connectContainerToNetwork(elem, val)));
+      }
+
+      return acc;
+    }, []));
+    this._logger.groupEnd();
     // ensure containers exist
     this._logger.group('creating containers');
     await Promise.all(
@@ -48,6 +58,16 @@ export class Composter {
     await Promise.all(
       Object.keys(config.containers).map(elem => this._docker.ensureContainerIsRemoved(elem))
     );
+    this._logger.groupEnd();
+    // disconnect external containers to network
+    this._logger.group('disconnecting external containers');
+    await Promise.all(this.removeDuplicates(Object.keys(config.networks)).reduce((acc, val) => {
+      if (config.networks[val].externalContainers) {
+        acc = acc.concat(config.networks[val].externalContainers.map(elem => this._docker.disconnectContainerFromNetwork(elem, val)));
+      }
+
+      return acc;
+    }, []));
     this._logger.groupEnd();
     // ensure all non-external networks, transient volumes, and dangling images are removed
     this._logger.group('removing networks, volumes, and images');

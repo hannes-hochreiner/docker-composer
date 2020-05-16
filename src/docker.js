@@ -234,4 +234,42 @@ export class Docker {
     });
     this._logger.info(`removed image "${imageName}"`);
   }
+
+  async connectContainerToNetwork(containerName, networkName) {
+    const connectedContainers = Object.values((await this._request({
+      method: 'get',
+      url: `/networks/${networkName}`
+    })).data.Containers).map(elem => elem.Name);
+
+    if (connectedContainers.includes(containerName)) {
+      this._logger.info(`container "${containerName}" is connected to network "${networkName}"`);
+      return;
+    }
+
+    await this._request({
+      method: 'post',
+      url: `/networks/${networkName}/connect`,
+      data: {Container: containerName}
+    });
+    this._logger.info(`connected container "${containerName}" to network "${networkName}"`);
+  }
+
+  async disconnectContainerFromNetwork(containerName, networkName) {
+    const connectedContainers = Object.values((await this._request({
+      method: 'get',
+      url: `/networks/${networkName}`
+    })).data.Containers).map(elem => elem.Name);
+
+    if (!connectedContainers.includes(containerName)) {
+      this._logger.info(`container "${containerName}" is not connected to network "${networkName}"`);
+      return;
+    }
+
+    await this._request({
+      method: 'post',
+      url: `/networks/${networkName}/disconnect`,
+      data: {Container: containerName}
+    });
+    this._logger.info(`disconnected container "${containerName}" from network "${networkName}"`);
+  }
 }

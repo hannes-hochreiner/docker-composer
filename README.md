@@ -66,6 +66,7 @@ Each configuration object has entries for the options defined below.
 
 ## Network Options
   * type (optional, "external"): type of the network; "external" networks will not be removed when the command "down" is issued.
+  * externalContainers (optional, array\[string]): an array of names or ids of containers, which are not listed in the configuration, but should be connected to the network.
   * config (optional, object): an object as described in the [Docker API](https://docs.docker.com/engine/api/v1.40/#operation/NetworkCreate); "Name" will be replaced by the name of the network as given in the networks object.
 
 ## Volume Options
