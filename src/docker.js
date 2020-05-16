@@ -216,7 +216,14 @@ export class Docker {
       return;
     }
 
-    if (image.Containers > 0) {
+    // get list of containers
+    const usedImageIds = (await this._request({
+      method: 'get',
+      url: '/containers/json',
+      params: {all: true}
+    })).data.map(elem => elem.ImageID);
+
+    if (usedImageIds.includes(image.Id)) {
       this._logger.info(`image "${imageName}" is still in use`);
       return;
     }
