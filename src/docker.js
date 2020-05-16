@@ -59,7 +59,7 @@ export class Docker {
     const images = (await this._request({
       method: 'get',
       url: '/images/json'
-    })).data.map(elem => elem.RepoTags).flat();
+    })).data.map(elem => elem.RepoTags).reduce((acc, val) => acc.concat(val), []);
     // check whether image is in list
     if (images.includes(imageName)) {
       this._logger.info(`image "${imageName}" exists`);
@@ -113,7 +113,7 @@ export class Docker {
       method: 'get',
       url: '/containers/json',
       params: {all: true}
-    })).data.map(elem => elem.Names).flat().map(elem => elem.substr(1));
+    })).data.map(elem => elem.Names).reduce((acc, val) => acc.concat(val), []).map(elem => elem.substr(1));
     
     return containers.includes(containerName);
   }
@@ -151,7 +151,7 @@ export class Docker {
       method: 'get',
       url: '/containers/json',
       params: {all: true}
-    })).data.map(elem => elem.Names).flat().map(elem => elem.substr(1));
+    })).data.map(elem => elem.Names).reduce((acc, val) => acc.concat(val), []).map(elem => elem.substr(1));
     // check whether container is in the list
     if (!containers.includes(containerName)) {
       this._logger.info(`container "${containerName}" does not exist`);

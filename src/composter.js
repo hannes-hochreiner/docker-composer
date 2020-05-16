@@ -20,7 +20,7 @@ export class Composter {
       this.removeDuplicates(Object.keys(config.volumes)).map(elem => this._docker.ensureVolumeExists(elem, config.volumes[elem].config)),
       // ensure images exist
       this.removeDuplicates(Object.values(config.containers).map(elem => elem.config.Image)).map(elem => this._docker.ensureImageExists(elem))
-    ].flat());
+    ].reduce((acc, val) => acc.concat(val), []));
     this._logger.groupEnd();
     // ensure containers exist
     this._logger.group('creating containers');
@@ -55,7 +55,7 @@ export class Composter {
       this.removeDuplicates(Object.keys(config.networks)).filter(elem => config.networks[elem].type != 'external').map(elem => this._docker.ensureNetworkIsRemoved(elem)),
       this.removeDuplicates(Object.keys(config.volumes)).filter(elem => config.volumes[elem].type === 'transient').map(elem => this._docker.ensureVolumeIsRemoved(elem)),
       this.removeDuplicates(Object.values(config.containers).map(elem => elem.config.Image)).map(elem => this._docker.removeUnusedImage(elem))
-    ].flat())
+    ].reduce((acc, val) => acc.concat(val), []))
     this._logger.groupEnd();
   }
 }
